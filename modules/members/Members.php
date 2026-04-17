@@ -2,12 +2,14 @@
 class Members extends Trongate {
 
     public function login(): void {
+        $this->_init_csrf_token();
         $data['view_module'] = 'members';
         $data['view_file'] = 'login';
         $this->templates->public($data);
     }
 
     public function register(): void {
+        $this->_init_csrf_token();
         $data['view_module'] = 'members';
         $data['view_file'] = 'register';
         $this->templates->public($data);
@@ -164,6 +166,15 @@ class Members extends Trongate {
         }
 
         die("<hr>Diagnose beendet.");
+    }
+
+    /**
+     * Ensures a CSRF token exists in the session.
+     */
+    private function _init_csrf_token(): void {
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
     }
 
 }
