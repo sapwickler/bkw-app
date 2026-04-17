@@ -143,6 +143,26 @@ class Members extends Trongate {
             echo "<p style='color:red;'>Tabelle 'members' nicht gefunden oder Fehler: " . $e->getMessage() . "</p>";
         }
 
+        // 4. Test Insert
+        echo "<h2>Test Schreibvorgang:</h2>";
+        try {
+            $test_data = [
+                'username' => 'testuser_' . time(),
+                'email' => 'test@test.de',
+                'password' => 'testpass',
+                'trongate_user_id' => 0,
+                'date_created' => time()
+            ];
+            $insert_id = $this->model->db->insert($test_data, 'members');
+            echo "<p style='color:green;'>Erfolg! Test-Datensatz geschrieben. ID: <strong>$insert_id</strong></p>";
+            
+            // Clean up
+            $this->model->db->query("DELETE FROM members WHERE id = $insert_id");
+            echo "<p>Test-Datensatz wurde wieder gelöscht.</p>";
+        } catch (Exception $e) {
+            echo "<p style='color:red;'>Schreibfehler: " . $e->getMessage() . "</p>";
+        }
+
         die("<hr>Diagnose beendet.");
     }
 
