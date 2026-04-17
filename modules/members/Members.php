@@ -75,6 +75,7 @@ class Members extends Trongate {
     /* --- Callbacks --- */
 
     public function username_check(string $str): string|bool {
+        block_url('members/username_check');
         $is_available = $this->model->is_username_available($str);
         if ($is_available === false) {
             return 'Dieser Benutzername ist bereits vergeben.';
@@ -83,6 +84,7 @@ class Members extends Trongate {
     }
 
     public function email_check(string $str): string|bool {
+        block_url('members/email_check');
         $is_available = $this->model->is_email_available($str);
         if ($is_available === false) {
             return 'Diese E-Mail Adresse ist bereits registriert.';
@@ -91,6 +93,7 @@ class Members extends Trongate {
     }
 
     public function login_check(string $email): string|bool {
+        block_url('members/login_check');
         $password = post('password');
         $credentials_valid = $this->model->validate_credentials($email, $password);
 

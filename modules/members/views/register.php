@@ -10,6 +10,7 @@
             ?>
             
             <form action="members/submit_registration" method="POST" style="margin-top: 2rem;">
+                <?= build_csrf_token() ?>
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Benutzername</label>
                     <input type="text" name="username" placeholder="Sonnenschein88" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);">
