@@ -20,18 +20,37 @@ class Members extends Trongate {
             redirect('register');
         }
 
-        // Set validation rules
-        $this->validation->set_rules('username', 'Benutzername', 'required|min_length[2]|max_length[65]|callback_username_check');
-        $this->validation->set_rules('email', 'E-Mail Adresse', 'required|valid_email|callback_email_check');
+        // 1. Basic Validation
+        $this->validation->set_rules('username', 'Benutzername', 'required|min_length[2]|max_length[65]');
+        $this->validation->set_rules('email', 'E-Mail Adresse', 'required|valid_email');
         $this->validation->set_rules('password', 'Passwort', 'required|min_length[8]');
 
         $result = $this->validation->run();
 
         if ($result === true) {
-            // Success
+            $username = post('username', true);
+            $email = post('email', true);
+
+            // 2. Manual check for Uniqueness (since callbacks fail with custom routing)
+            $username_available = $this->model->is_username_available($username);
+            $email_available = $this->model->is_email_available($email);
+
+            if (!$username_available || !$email_available) {
+                // Manual error reporting
+                if (!$username_available) {
+                    $_SESSION['form_submission_errors']['username'][] = 'Dieser Benutzername ist bereits vergeben.';
+                }
+                if (!$email_available) {
+                    $_SESSION['form_submission_errors']['email'][] = 'Diese E-Mail Adresse ist bereits registriert.';
+                }
+                $this->register();
+                return;
+            }
+
+            // 3. Success -> Insert
             $data = [
-                'username' => post('username', true),
-                'email' => post('email', true),
+                'username' => $username,
+                'email' => $email,
                 'password' => post('password')
             ];
 
@@ -51,14 +70,24 @@ class Members extends Trongate {
             redirect('login');
         }
 
-        $this->validation->set_rules('email', 'E-Mail Adresse', 'required|valid_email|callback_login_check');
+        $this->validation->set_rules('email', 'E-Mail Adresse', 'required|valid_email');
         $this->validation->set_rules('password', 'Passwort', 'required');
 
         $result = $this->validation->run();
 
         if ($result === true) {
-            // Log user in
             $email = post('email', true);
+            $password = post('password');
+
+            $credentials_valid = $this->model->validate_credentials($email, $password);
+
+            if ($credentials_valid === false) {
+                $_SESSION['form_submission_errors']['email'][] = 'Ungültige Anmeldedaten.';
+                $this->login();
+                return;
+            }
+
+            // Log user in
             $this->model->log_user_in($email);
             redirect('dashboard');
         } else {
@@ -70,37 +99,6 @@ class Members extends Trongate {
         $this->module('trongate_tokens');
         $this->trongate_tokens->destroy();
         redirect('/');
-    }
-
-    /* --- Callbacks --- */
-
-    public function username_check(string $str): string|bool {
-        block_url('members/username_check');
-        $is_available = $this->model->is_username_available($str);
-        if ($is_available === false) {
-            return 'Dieser Benutzername ist bereits vergeben.';
-        }
-        return true;
-    }
-
-    public function email_check(string $str): string|bool {
-        block_url('members/email_check');
-        $is_available = $this->model->is_email_available($str);
-        if ($is_available === false) {
-            return 'Diese E-Mail Adresse ist bereits registriert.';
-        }
-        return true;
-    }
-
-    public function login_check(string $email): string|bool {
-        block_url('members/login_check');
-        $password = post('password');
-        $credentials_valid = $this->model->validate_credentials($email, $password);
-
-        if ($credentials_valid === false) {
-            return 'Ungültige Anmeldedaten.';
-        }
-        return true;
     }
 
 }
