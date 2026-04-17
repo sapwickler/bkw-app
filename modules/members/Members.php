@@ -48,15 +48,22 @@ class Members extends Trongate {
             }
 
             // 3. Success -> Insert
-            $data = [
-                'username' => $username,
-                'email' => $email,
-                'password' => post('password')
-            ];
+            try {
+                $data = [
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => post('password')
+                ];
 
-            $this->model->create_new_member($data);
-            set_flashdata('Konto erfolgreich erstellt. Bitte melde dich an.');
-            redirect('login');
+                $this->model->create_new_member($data);
+                set_flashdata('Konto erfolgreich erstellt. Bitte melde dich an.');
+                redirect('login');
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo "<h1>Registrierungsfehler</h1>";
+                echo "<p>Fehler: " . $e->getMessage() . "</p>";
+                die();
+            }
         } else {
             // Validation failed
             $this->register();
