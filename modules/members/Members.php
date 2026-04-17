@@ -108,4 +108,42 @@ class Members extends Trongate {
         redirect('/');
     }
 
+    public function db_test(): void {
+        echo "<h1>Datenbank Diagnose</h1>";
+        
+        // 1. Check Connection
+        try {
+            $sql = "SELECT DATABASE() as db_name";
+            $rows = $this->model->db->query($sql, 'object');
+            echo "<p>Verbunden mit Datenbank: <strong>" . $rows[0]->db_name . "</strong></p>";
+        } catch (Exception $e) {
+            echo "<p style='color:red;'>Verbindungsfehler: " . $e->getMessage() . "</p>";
+            die();
+        }
+
+        // 2. Check Tables
+        echo "<h2>Vorhandene Tabellen:</h2>";
+        $rows = $this->model->db->query("SHOW TABLES", 'array');
+        echo "<ul>";
+        foreach ($rows as $row) {
+            echo "<li>" . array_values($row)[0] . "</li>";
+        }
+        echo "</ul>";
+
+        // 3. Check 'members' table structure
+        echo "<h2>Struktur von 'members':</h2>";
+        try {
+            $rows = $this->model->db->query("DESCRIBE members", 'object');
+            echo "<table border='1'><tr><th>Field</th><th>Type</th></tr>";
+            foreach ($rows as $row) {
+                echo "<tr><td>{$row->Field}</td><td>{$row->Type}</td></tr>";
+            }
+            echo "</table>";
+        } catch (Exception $e) {
+            echo "<p style='color:red;'>Tabelle 'members' nicht gefunden oder Fehler: " . $e->getMessage() . "</p>";
+        }
+
+        die("<hr>Diagnose beendet.");
+    }
+
 }
