@@ -1,0 +1,150 @@
+:root {
+    /* Color Palette - HSL based for easy adjustment */
+    --solar-yellow: 45, 100%, 50%;
+    --solar-orange: 25, 100%, 55%;
+    --energy-blue: 210, 100%, 50%;
+    
+    /* Default (Dark Mode) Variables */
+    --bg-color: hsl(220, 25%, 12%);
+    --surface-color: hsl(220, 25%, 15%);
+    --text-primary: hsl(0, 0%, 95%);
+    --text-secondary: hsl(220, 10%, 70%);
+    --border-color: hsl(220, 20%, 20%);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--solar-yellow)), hsl(var(--solar-orange)));
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-color: hsl(220, 30%, 98%);
+        --surface-color: hsl(0, 0%, 100%);
+        --text-primary: hsl(220, 25%, 12%);
+        --text-secondary: hsl(220, 10%, 40%);
+        --border-color: hsl(220, 20%, 90%);
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 3rem; line-height: 1.1; }
+h2 { font-size: 2.2rem; }
+p { margin-bottom: 1.5rem; color: var(--text-secondary); }
+
+/* Components */
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-primary {
+    background: var(--gradient-hero);
+    color: #000;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+/* Hero Section */
+.hero {
+    padding: 100px 0 60px;
+    text-align: center;
+}
+
+.hero h1 {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.info-card i {
+    font-size: 2rem;
+    color: hsl(var(--solar-yellow));
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Utility */
+.mt-2 { margin-top: 2rem; }
+.text-center { text-align: center; }
