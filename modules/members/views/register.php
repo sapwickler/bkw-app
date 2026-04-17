@@ -3,6 +3,11 @@
         <div class="card" style="max-width: 450px; margin: 0 auto; text-align: left;">
             <h2 class="text-center">Registrierung</h2>
             <p class="text-center">Erstelle dein Konto und starte die Optimierung deines BKWs.</p>
+
+            <?php
+            echo validation_errors();
+            echo flashdata();
+            ?>
             
             <form action="members/submit_registration" method="POST" style="margin-top: 2rem;">
                 <div style="margin-bottom: 1.5rem;">
@@ -20,7 +25,7 @@
                     <input type="password" name="password" placeholder="••••••••" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);">
                 </div>
                 
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrieren</button>
+                <button type="submit" name="submit" value="Registrieren" class="btn btn-primary" style="width: 100%;">Registrieren</button>
             </form>
             
             <div class="text-center" style="margin-top: 1.5rem;">
